@@ -19,7 +19,7 @@ of an application in a decoupled way.
 At the moment the tests depends on server running because we need a fully functional route running to validate the concept
 
 ```console
-git clone <github-link> myproject
+git clone git@github.com:virb30/poc-chain.git myproject
 
 cd myproject
 

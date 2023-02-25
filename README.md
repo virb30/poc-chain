@@ -20,17 +20,12 @@ At the moment the tests depends on server running because we need a fully functi
 
 ```console
 git clone git@github.com:virb30/poc-chain.git myproject
-
 cd myproject
-
 composer install
-
 # for problem
 php -S 0.0.0.0:8080 public/problem/index.php
-
 # for solution
 php -S 0.0.0.0:8080 public/solution/index.php
-
 ./vendor/bin/phpunit tests
 ```
 

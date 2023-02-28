@@ -2,7 +2,6 @@
 
 namespace App\Solution\Handlers\HttpExceptionHandler;
 
-use Exception;
 use Throwable;
 use Psr\Http\Message\ResponseInterface;
 
@@ -19,10 +18,14 @@ class DefaultHttpExceptionHandler implements HttpExceptionHandlerInterface
 
     public function execute(Throwable $exception, ResponseInterface $response)
     {
-        if ($exception instanceof Exception) {
-            $response->getBody()->write($exception->getMessage() ?? $this->defaultMessage);
-            return $response->withStatus($this->statusCode);
+        $code = $exception->getCode();
+        $message = $exception->getMessage() ?? $this->defaultMessage;
+        if ($code < 400 || $code > 600) {
+            $code = $this->statusCode;
         }
+
+        $response->getBody()->write($message);
+        return $response->withStatus($code);
 
         if ($this->next) {
             return $this->next->execute($exception, $response);

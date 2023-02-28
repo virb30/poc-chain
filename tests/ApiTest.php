@@ -18,6 +18,15 @@ class ApiTest extends TestCase
         $this->assertEquals($message, $body);
     }
 
+    public function testSuccessRoute()
+    {
+        $client = new Client(['base_uri' => 'http://localhost:8080']);
+        $response = $client->request("GET", "/success/route/1", ['http_errors' => false]);
+        $body = (string) $response->getBody();
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals("Success", $body);
+    }
+
     public static function httpErrorProvider()
     {
         return [
@@ -56,6 +65,18 @@ class ApiTest extends TestCase
                 'route' => '/error/route/6',
                 'code' => 500,
                 'message' => 'Internal server error'
+            ],
+            'error404 manual' => [
+                'method' => 'GET',
+                'route' => '/error/route/7',
+                'code' => 404,
+                'message' => 'Não achei'
+            ],
+            'error422 manual' => [
+                'method' => 'GET',
+                'route' => '/error/route/8',
+                'code' => 422,
+                'message' => 'Unprocessable manual'
             ],
         ];
     }

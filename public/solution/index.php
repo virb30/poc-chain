@@ -29,19 +29,12 @@ $app = AppFactory::create();
 $app->addRoutingMiddleware();
 
 
-$httpExceptionHandlerChain = new UnauthorizedHttpExceptionHandler(
-    new ForbiddenHttpExceptionHandler(
-        new NotFoundHttpExceptionHandler(
-            new BadRequestHttpExceptionHandler(
-                new UnprocessableHttpExceptionHandler(
-                    new DefaultHttpExceptionHandler()
-                )
-            )
-        )
-    )
-);
-
-
+$defaultExceptionHandler = new DefaultHttpExceptionHandler(null); // fim da cadeia (chain)
+$unprocessableEntityHandler = new UnprocessableHttpExceptionHandler($defaultExceptionHandler);
+$badRequestHandler = new BadRequestHttpExceptionHandler($unprocessableEntityHandler);
+$notFoundHandler = new NotFoundHttpExceptionHandler($badRequestHandler);
+$forbiddenHandler = new ForbiddenHttpExceptionHandler($notFoundHandler);
+$httpExceptionHandlerChain = new UnauthorizedHttpExceptionHandler($forbiddenHandler); // início da cadeia (chain)
 
 // Define Custom Error Handler
 $customErrorHandler = new CustomErrorHandler($app->getCallableResolver(), $app->getResponseFactory(), null, $httpExceptionHandlerChain);
@@ -54,5 +47,8 @@ $app->get('/error/route/3', SolutionController::class . ':failingMethod3');
 $app->get('/error/route/4', SolutionController::class . ':failingMethod4');
 $app->get('/error/route/5', SolutionController::class . ':failingMethod5');
 $app->get('/error/route/6', SolutionController::class . ':failingMethod6');
+$app->get('/error/route/7', SolutionController::class . ':failingMethod7');
+$app->get('/error/route/8', SolutionController::class . ':failingMethod8');
+$app->get('/success/route/1', SolutionController::class . ':passingMethod');
 
 $app->run();

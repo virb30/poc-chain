@@ -40,4 +40,9 @@ class Service
     {
         throw new Exception("Internal server error");
     }
+
+    public static function failingService7()
+    {
+        throw new Exception("Unprocessable manual", 422);
+    }
 }
